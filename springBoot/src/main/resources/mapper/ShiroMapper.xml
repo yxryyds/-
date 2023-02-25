@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapper接口与映射文件要保证两个一致：
+    1. namespace必须与mapper接口文件名一致
+    2. mapper接口中的方法与映射文件中SQL语句的ID属性一致
+-->
+<mapper namespace="com.example.springBoot.dao.Shiro">
+
+    <select id="getUserByName" resultType="shiroUser">
+        select * from t_user where username = #{name};
+    </select>
+</mapper>

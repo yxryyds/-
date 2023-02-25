@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.springBoot.dao.exam.ExamMapper">
+
+<!--    public int updateStudent(Student s);-->
+    <update id="updateStudent">
+        update student
+        <set>
+            <if test="stuId != null">
+                stu_no = #{stuId},
+            </if>
+            <if test="stuName != null">
+                stu_name = #{stuName},
+            </if>
+            <if test="sex != null">
+                stu_sex = #{sex},
+            </if>
+            <if test="age != null">
+                stu_age = #{age},
+            </if>
+            <if test="dept != null">
+                stu_dept = #{dept}
+            </if>
+        </set>
+        where id = #{id} and not exists
+        (select s.id from (select * from student where id != #{id} and stu_no = #{stuId}) as s)
+    </update>
+
+    <resultMap id="courseMap" type="cource">
+        <id column="id" property="id" />
+        <result column="course_no" property="no"/>
+        <result column="course_name" property="name"/>
+        <result column="course_prior_id" property="priorId"/>
+        <result column="course_credit" property="credit"/>
+    </resultMap>
+
+<!--public Cource queryCourse(
+            String courseNo, String courseName,
+            Integer priorId, Integer credit);-->
+    <select id="queryCourse" resultMap="courseMap">
+        select *
+        from course
+        <where>
+            <if test="courseNo != null">
+                course_no = #{courseNo}
+            </if>
+            <if test="courseName != null">
+                and course_name = #{courseName}
+            </if>
+            <if test="priorId != null">
+                and course_prior_id = #{priorId}
+            </if>
+            <if test="credit != null">
+                and course_credit >= #{credit}
+            </if>
+        </where>
+
+    </select>
+
+
+    <resultMap id="stu" type="student">
+        <result property="id" column="id"/>
+        <result property="stuId" column="stu_no"/>
+        <result property="stuName" column="stu_name"/>
+        <result property="sex" column="stu_sex"/>
+        <result property="age" column="stu_age"/>
+        <result property="dept" column="stu_dept"/>
+        <collection property="scResultList" ofType="scResult">
+            <result property="scId" column="sc_id"/>
+            <result property="courseId" column="course_no"/>
+            <result property="courseName" column="course_name"/>
+            <result property="grade" column="grade"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryAllStudentSc" resultMap="stu">
+        select *
+        from student left join
+             (select
+                  sc.id as sc_id, sc.stu_id, course.course_no,  course.course_name, sc.grade
+              from sc, course
+              where sc.course_id = course.id) as s
+        on student.id = s.stu_id
+    </select>
+</mapper>

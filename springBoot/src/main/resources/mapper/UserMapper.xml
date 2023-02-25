@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapper接口与映射文件要保证两个一致：
+    1. namespace必须与mapper接口文件名一致
+    2. mapper接口中的方法与映射文件中SQL语句的ID属性一致
+-->
+<mapper namespace="com.example.springBoot.dao.UserDao">
+<!-- public User getUserByNameAndPassword(@Param("name") String username, @Param("pass") String password);-->
+    <resultMap id="returnUser" type="user">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+    </resultMap>
+    <select id="getUserByNameAndPassword" resultMap="returnUser">
+        select * from t_user where username = #{name} and password = #{pass};
+    </select>
+
+<!--    public User getUserByName(@Param("name") String name);-->
+    <select id="getUserByName" resultMap="returnUser">
+        select * from t_user where username = #{name};
+    </select>
+
+    <!--    public int addUser(User user);-->
+    <insert id="addUser">
+        insert into t_user(id, username, password) values (#{id}, #{username}, #{password});
+    </insert>
+
+    <insert id="insertDataUser" keyProperty="id" useGeneratedKeys="true">
+        insert into t_user(username, password, time) values (#{username}, #{password}, #{time});
+    </insert>
+
+    <!--    public User[] getAll(Integer start, Integer pageSize);-->
+    <select id="getAll" resultMap="returnUser">
+        select * from t_user
+    </select>
+
+    <select id="getByUsernameDataUser" resultType="dataUser">
+        select * from t_user where username = #{name};
+    </select>
+
+
+</mapper>

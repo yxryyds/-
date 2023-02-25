@@ -1,0 +1,14 @@
+test:
+  name: 张三
+  hobby: 跳舞
+  date: 2020/2/20
+  strings: [篮球,足球]
+  list: [k1,k2]
+  map: {math: 30,english: 60}
+  set: [123,214]
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: countSql
